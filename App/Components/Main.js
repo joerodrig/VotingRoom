@@ -17,7 +17,6 @@ class Main extends React.Component {
   //Direct To "Create Room View"
   _createRoom() {
     console.log("Creating a Room");
-    //this.props.toggleNavBar();
     this.props.navigator.push({
       title: "Create a Room",
       component: CreateRoom

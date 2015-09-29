@@ -11,13 +11,22 @@ var {
 class Create extends React.Component {
   constructor(props){
     super(props);
+
+    this._generateRoom = this._generateRoom.bind(this);
   }
 
+  _generateRoom() {
+    fetch('http://localhost:3000/groups/new?group=group_name=ResistanceRoom321')
+      .then((response) => response.text())
+      .then((responseText) => {
+        console.log("Successfully Generated Room");
+      });
+  }
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.parameters}>Room Name: Resistance </Text>
-        <Button>Create</Button>
+        <Text style={styles.parameters}>Room Name: Resistance321</Text>
+        <Button onPress={this._generateRoom}>Create</Button>
       </View>
     )
   }
