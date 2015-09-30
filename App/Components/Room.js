@@ -1,6 +1,5 @@
 var Button   = require('react-native-button');
 var React    = require('react-native');
-var Room = require('./Room');
 
 var {
   View,
@@ -8,30 +7,32 @@ var {
   StyleSheet
 } = React;
 
-class Create extends React.Component {
+class Room extends React.Component {
   constructor(props){
     super(props);
 
-    this._generateRoom = this._generateRoom.bind(this);
+    this._addPlayer = this._addPlayer.bind(this);
   }
 
-  _generateRoom() {
+  _addPlayer() {
     fetch('http://localhost:3000/groups/new?group=group_name=ResistanceRoom321')
       .then((response) => response.text())
       .then((responseText) => {
-        console.log("Successfully Generated Room");
-        //Joining room
-        this.props.navigator.push({
-          title: "Room Name",
-          component: Room
-        })
+        console.log("Successfully Added Player");
       });
   }
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.parameters}>Room Name: Resistance321</Text>
-        <Button onPress={this._generateRoom}>Create</Button>
+        <Text> Room Name</Text>
+        <Text>-- Members --</Text>
+        <Text> Joe </Text>
+        <Text> Ricky </Text>
+        <Text> Shyama</Text>
+        <Text> Cassie</Text>
+        <Text> Mike</Text>
+        <Text> Ines</Text>
+        <Button> Start Game</Button>
       </View>
     )
   }
@@ -51,4 +52,4 @@ var styles = StyleSheet.create({
 });
 
 
-module.exports = Create;
+module.exports = Room;

@@ -16,11 +16,13 @@ class VotingRoom extends React.Component {
     this.state = {};
     this.state.navigationBarHidden = false;
   }
+
   toggleNavBar() {
     this.setState({
       navigationBarHidden: !this.state.navigationBarHidden
     });
   }
+  
   render() {
     return (
       <NavigatorIOS
