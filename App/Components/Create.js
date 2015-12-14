@@ -1,6 +1,7 @@
 var Button          = require('react-native-button');
 var React           = require('react-native');
 var Room            = require('./Room');
+var Rooms            = require('./Rooms');
 var Firebase        = require('firebase');
 var FirebaseBaseRef = new Firebase("https://voting-room.firebaseio.com/");
 var {
@@ -15,27 +16,50 @@ class Create extends React.Component {
     super(props);
     this.state = {
       roomName: ""
-    }
+    };
     this._generateRoom = this._generateRoom.bind(this);
   }
 
   _generateRoom() {
+    let self = this;
     FirebaseRoomsRef = new Firebase("https://voting-room.firebaseio.com/rooms");
-    FirebaseRoomsRef.push({
-      roomName: this.state.roomName,
-      creator: "Bob Dylan"
-    })
+    FirebaseRoomsRef.push(
+      {
+        roomName: this.state.roomName,
+        published: false
+      },
+      function(error) {
+        if (error) {
+          console.log("Data could not be saved:", error);
+        } else {
+          console.log("Data saved successfully");
+          //Joining room
+          self.props.navigator.push({
+            title: "Rooms",
+            component: Rooms
+          });
+        }
+    });
   }
   render() {
     return (
       <View style={styles.container}>
-        <TextInput
-          style={styles.room_name}
-          placeholder="Enter a room name"
-          value={this.state.roomName}
-          onChangeText={(text) => this.setState({roomName: text})}
-        />
-        <Button onPress={this._generateRoom}>Create</Button>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.roomName}
+            autofocus={true}
+            maxLength={25}
+            textAlign='center'
+            placeholder="Enter a room name"
+            value={this.state.roomName}
+            onChangeText={(text) => this.setState({roomName: text})}
+          />
+        </View>
+        <Button
+          onPress={this._generateRoom}
+          style={styles.createButton}>
+            Create
+        </Button>
       </View>
     )
   }
@@ -45,14 +69,24 @@ var styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  room_name: {
-    height: 40,
-    flex: 1,
-    flexDirection: 'row',
-    borderColor: 'gray',
-    borderWidth: 1
-  }
 
+  inputContainer: {
+    flex: 1,
+    marginTop: 125,
+  },
+  roomName: {
+    height: 40,
+    borderColor: 'gray',
+    borderWidth: 1,
+  },
+  createButton: {
+    height: 50,
+    padding: 12,
+    fontSize: 24,
+    backgroundColor: "#11D811",
+    color: 'white',
+    flex: 1,
+  },
 });
 
 
