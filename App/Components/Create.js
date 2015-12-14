@@ -1,36 +1,40 @@
-var Button   = require('react-native-button');
-var React    = require('react-native');
-var Room = require('./Room');
-
+var Button          = require('react-native-button');
+var React           = require('react-native');
+var Room            = require('./Room');
+var Firebase        = require('firebase');
+var FirebaseBaseRef = new Firebase("https://voting-room.firebaseio.com/");
 var {
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  TextInput
 } = React;
 
 class Create extends React.Component {
   constructor(props){
     super(props);
-
+    this.state = {
+      roomName: ""
+    }
     this._generateRoom = this._generateRoom.bind(this);
   }
 
   _generateRoom() {
-    fetch('http://localhost:3000/groups/new?group=group_name=ResistanceRoom321')
-      .then((response) => response.text())
-      .then((responseText) => {
-        console.log("Successfully Generated Room");
-        //Joining room
-        this.props.navigator.push({
-          title: "Room Name",
-          component: Room
-        })
-      });
+    FirebaseRoomsRef = new Firebase("https://voting-room.firebaseio.com/rooms");
+    FirebaseRoomsRef.push({
+      roomName: this.state.roomName,
+      creator: "Bob Dylan"
+    })
   }
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.parameters}>Room Name: Resistance321</Text>
+        <TextInput
+          style={styles.room_name}
+          placeholder="Enter a room name"
+          value={this.state.roomName}
+          onChangeText={(text) => this.setState({roomName: text})}
+        />
         <Button onPress={this._generateRoom}>Create</Button>
       </View>
     )
@@ -40,13 +44,14 @@ class Create extends React.Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent:'center'
   },
-  parameters: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
+  room_name: {
+    height: 40,
+    flex: 1,
+    flexDirection: 'row',
+    borderColor: 'gray',
+    borderWidth: 1
+  }
 
 });
 
