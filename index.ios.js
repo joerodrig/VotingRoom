@@ -2,19 +2,14 @@
 var Button = require('react-native-button');
 var React = require('react-native');
 var Main = require('./App/Components/Main');
-var {
-  AppRegistry,
-  StyleSheet,
-  Text,
-  NavigatorIOS,
-  View,
-} = React;
+var { AppRegistry, StyleSheet, Text, NavigatorIOS, View } = React;
 
 class VotingRoom extends React.Component {
   constructor(props) {
-    super(props)
-    this.state = {};
-    this.state.navigationBarHidden = false;
+    super(props);
+    this.state = {
+      navigationBarHidden: false
+    };
   }
 
   toggleNavBar() {
@@ -22,7 +17,7 @@ class VotingRoom extends React.Component {
       navigationBarHidden: !this.state.navigationBarHidden
     });
   }
-  
+
   render() {
     return (
       <NavigatorIOS
@@ -31,10 +26,9 @@ class VotingRoom extends React.Component {
         initialRoute={{
           title: 'Choose One',
           component: Main,
-          passProps: {
-            toggleNavBar: this.toggleNavBar,
-          }
-        }} />
+          passProps: { toggleNavBar: this.toggleNavBar }
+        }}
+      />
     );
   }
 }
@@ -44,6 +38,6 @@ var styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#111'
   }
-})
+});
 
 AppRegistry.registerComponent('VotingRoom', () => VotingRoom);

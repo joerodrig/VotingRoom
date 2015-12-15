@@ -1,47 +1,41 @@
-var Button   = require('react-native-button');
-var React    = require('react-native');
-var Firebase = require('firebase');
+var Button           = require('react-native-button');
+var React            = require('react-native');
+var Firebase         = require('firebase');
 var FirebaseRoomsRef = new Firebase("https://voting-room.firebaseio.com/rooms");
-
-var {
-  View,
-  Text,
-  StyleSheet,
-  ListView
-} = React;
+var { View, Text, StyleSheet, ListView } = React;
 
 class Rooms extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      rooms: [],
-      ds: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
+      ds: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
+      updating: false
     }
-    this.state.dataSource = this.state.ds.cloneWithRows(this.state.rooms);
+    this.state.dataSource = this.state.ds.cloneWithRows([]);
   }
 
   componentDidMount() {
-    console.log("Fetching data");
     this._fetchRooms();
   }
 
   _fetchRooms() {
+    var self = this;
+    console.log("Fetching data");
     var roomsArray = [];
-    FirebaseRoomsRef.on("value", function(rooms) {
+    this.setState({updating: true})
+    FirebaseRoomsRef.once("value", function(rooms) {
       if (rooms.val() === null){
-        console.log("No rooms exist");
         return;
       } else {
         Object.keys(rooms.val()).forEach(function(key) {
           roomsArray.push(rooms.val()[key]);
         });
+        self.setState({dataSource: self.state.ds.cloneWithRows(roomsArray)});
+        self.setState({updating: false});
       }
     }, function (errorObject) {
       console.log(" The read failed: " + errorObject);
     });
-
-    this.setState({rooms: roomsArray});
-    this.setState({dataSource: this.state.ds.cloneWithRows(roomsArray)},this.forceUpdate());
   }
 
   render() {
@@ -51,6 +45,7 @@ class Rooms extends React.Component {
         <ListView style={styles.roomsList}
               dataSource={this.state.dataSource}
               initialListSize={25}
+              onEndReached={this._fetchRooms.bind(this)}
               renderRow={(rowData) =>
                 <View>
                   <View style={styles.row}>
@@ -58,8 +53,8 @@ class Rooms extends React.Component {
                   </View>
                   <View style={styles.separator} />
                 </View>
-              }
-            />
+              }>
+        </ListView>
       </View>
     )
   }

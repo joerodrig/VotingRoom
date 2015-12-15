@@ -10,15 +10,6 @@ var {
 class Room extends React.Component {
   constructor(props){
     super(props);
-    this._addPlayer = this._addPlayer.bind(this);
-  }
-
-  _addPlayer() {
-    // fetch('http://localhost:3000/groups/new?group=group_name=ResistanceRoom321')
-    //   .then((response) => response.text())
-    //   .then((responseText) => {
-    //     console.log("Successfully Added Player");
-    //   });
   }
 
   render() {
@@ -36,16 +27,16 @@ class Room extends React.Component {
 var styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent:'center'
+    justifyContent: 'center'
   },
   main: {
     flex: 1,
-    marginTop: 75,
+    marginTop: 75
   },
   parameters: {
     textAlign: 'center',
     color: '#333333',
-    marginBottom: 5,
+    marginBottom: 5
   },
   inviteButton: {
     height: 50,
@@ -53,9 +44,8 @@ var styles = StyleSheet.create({
     fontSize: 24,
     backgroundColor: "#11D811",
     color: 'white',
-    flex: 1,
+    flex: 1
   }
-
 });
 
 
