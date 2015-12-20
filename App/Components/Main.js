@@ -23,7 +23,7 @@ class Main extends React.Component {
 
   // Navigator: Direct To "Join Room View"
   _joinRoom() {
-    console.log("Joining a Room");
+    console.log("Joining a Unit");
     this.props.navigator.push({
       title: "Join a Room",
       component: Rooms
@@ -35,15 +35,15 @@ class Main extends React.Component {
       <View style={styles.container}>
         <View style={styles.main}>
           <Text style={styles.welcome}>
-            Voting Room
+            Rentals
           </Text>
         </View>
 
         <Button style={styles.createRoomButton} onPress={this._createRoom}>
-          Create Room
+          Create Unit
         </Button>
         <Button style={styles.joinRoomButton} onPress={this._joinRoom}>
-          Join Room
+          Join Unit
         </Button>
       </View>
     )

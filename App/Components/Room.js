@@ -4,7 +4,8 @@ var React    = require('react-native');
 var {
   View,
   Text,
-  StyleSheet
+  StyleSheet,
+  TextInput
 } = React;
 
 class Room extends React.Component {
@@ -37,6 +38,10 @@ var styles = StyleSheet.create({
     textAlign: 'center',
     color: '#333333',
     marginBottom: 5
+  },
+  inputContainer: {
+    flex: 1,
+    marginTop: 125,
   },
   inviteButton: {
     height: 50,

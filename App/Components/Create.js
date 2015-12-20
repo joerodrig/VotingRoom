@@ -1,60 +1,85 @@
-var Button          = require('react-native-button');
-var React           = require('react-native');
-var Room            = require('./Room');
-var Rooms            = require('./Rooms');
-var Firebase        = require('firebase');
-var FirebaseBaseRef = new Firebase("https://voting-room.firebaseio.com/");
-var {
-  View,
-  Text,
-  StyleSheet,
-  TextInput
-} = React;
+var Button           = require('react-native-button');
+var React            = require('react-native');
+var Room             = require('./Room');
+var MonthlyHistory   = require('./MonthlyHistory');
+var Firebase         = require('firebase');
+var FirebaseRoomsRef = new Firebase("https://voting-room.firebaseio.com/rooms");
+
+// tcomb-form
+var t = require('tcomb-form-native');
+var Form = t.form.Form;
+
+var { View, Text, StyleSheet, TextInput } = React;
+
+// Domain model
+var Unit = t.struct({
+  unit_name: t.String,
+  monthly_rent: t.Number,
+  tenant_count: t.Number
+})
 
 class Create extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      roomName: ""
-    };
     this._generateRoom = this._generateRoom.bind(this);
   }
 
   _generateRoom() {
     let self = this;
-    FirebaseRoomsRef = new Firebase("https://voting-room.firebaseio.com/rooms");
-    FirebaseRoomsRef.push(
-      {
-        roomName: this.state.roomName,
-        published: false
-      },
-      function(error) {
-        if (error) {
-          console.log("Data could not be saved:", error);
-        } else {
-          console.log("Data saved successfully");
-          //Joining room
-          self.props.navigator.push({
-            title: "Rooms",
-            component: Rooms
-          });
-        }
-    });
+
+    // Hacky way to calculate a year time period starting with current month
+    var monthNames = ["January", "February", "March", "April", "May", "June",
+                      "July", "August", "September", "October", "November", "December"
+    ];
+    var d = new Date();
+    var months = [];
+    for (i = 0; i <= 12; i++) {
+      if (i !== 0){
+        let newDate = new Date(d.setMonth(d.getMonth() + 1));
+        months.push({month: i, name: monthNames[newDate.getMonth()], rent_paid: false});
+      } else {
+        months.push({month: i, name: monthNames[d.getMonth()], rent_paid: false});
+      }
+    }
+
+    var inputs = this.refs.form.getValue();
+    if (inputs) {
+      var newUnit =
+        FirebaseRoomsRef.push(
+          {
+            name: inputs.unit_name,
+            monthly_rent: inputs.monthly_rent,
+            tenant_count: inputs.tenant_count,
+            published: false,
+            months: months
+
+          },
+          function(error) {
+            if (error) {
+              console.log("Data could not be saved:", error);
+            } else {
+              console.log("Data saved successfully");
+              //Joining room
+              self.props.navigator.push({
+                title: "Monthly History",
+                component: MonthlyHistory,
+                passProps: { unit: newUnit.key() }
+              });
+            }
+        });
+    }
   }
+
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.inputContainer}>
-          <TextInput
-            style={styles.roomName}
-            autofocus={true}
-            maxLength={25}
-            textAlign='center'
-            placeholder="Enter a room name"
-            value={this.state.roomName}
-            onChangeText={(text) => this.setState({roomName: text})}
+          <Form
+            ref="form"
+            type={Unit}
           />
         </View>
+
         <Button
           onPress={this._generateRoom}
           style={styles.createButton}>
@@ -72,7 +97,8 @@ var styles = StyleSheet.create({
 
   inputContainer: {
     flex: 1,
-    marginTop: 125,
+    marginTop: 75,
+    padding: 25
   },
   roomName: {
     height: 40,
