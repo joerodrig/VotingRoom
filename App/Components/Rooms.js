@@ -28,7 +28,7 @@ class Rooms extends React.Component {
         return;
       } else {
         Object.keys(rooms.val()).forEach(function(key) {
-          roomsArray.push(rooms.val()[key]);
+          roomsArray.push(rooms.val()[key]['name']);
         });
         self.setState({dataSource: self.state.ds.cloneWithRows(roomsArray)});
         self.setState({updating: false});

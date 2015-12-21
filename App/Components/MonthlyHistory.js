@@ -40,6 +40,15 @@ class MonthlyHistory extends React.Component {
     });
   }
 
+  _fetchMonth(rowData) {
+    //Joining room
+    this.props.navigator.push({
+      title: rowData.name,
+      component: MonthlyHistory,
+      passProps: {}
+    });
+  }
+
   render() {
     // Load rooms
     return (
@@ -47,11 +56,10 @@ class MonthlyHistory extends React.Component {
         <ListView style={styles.roomsList}
               dataSource={this.state.dataSource}
               initialListSize={25}
-              onEndReached={this._fetchRooms.bind(this)}
               renderRow={(rowData) =>
                 <View>
                   <View style={styles.row}>
-                    <Text style={styles.text}>{rowData}</Text>
+                    <Text style={styles.text} onPress={this._fetchMonth.bind(this, rowData)}>{rowData.name}</Text>
                   </View>
                   <View style={styles.separator} />
                 </View>
