@@ -9,7 +9,7 @@ var FirebaseRoomsRef = new Firebase("https://voting-room.firebaseio.com/rooms");
 var t = require('tcomb-form-native');
 var Form = t.form.Form;
 
-var { View, Text, StyleSheet, TextInput } = React;
+var { View, Text, StyleSheet, TextInput, ScrollView } = React;
 
 // Domain model
 var Unit = t.struct({
@@ -17,6 +17,17 @@ var Unit = t.struct({
   monthly_rent: t.Number,
   tenant_count: t.Number
 })
+
+var options = {
+  fields: {
+    monthly_rent: {
+      keyboardType: 'numeric'
+    },
+    tenant_count: {
+      keyboardType: 'numeric'
+    },
+  }
+}
 
 class Create extends React.Component {
   constructor(props){
@@ -72,20 +83,22 @@ class Create extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
+        <View style={styles.nav}>
+          <Button
+            style={styles.createButton}
+            onPress={this._generateRoom}>
+            Create
+          </Button>
+        </View>
         <View style={styles.inputContainer}>
           <Form
             ref="form"
             type={Unit}
+            options={options}
           />
         </View>
-
-        <Button
-          onPress={this._generateRoom}
-          style={styles.createButton}>
-            Create
-        </Button>
-      </View>
+      </ScrollView>
     )
   }
 }
@@ -97,7 +110,6 @@ var styles = StyleSheet.create({
 
   inputContainer: {
     flex: 1,
-    marginTop: 75,
     padding: 25
   },
   roomName: {
@@ -105,13 +117,19 @@ var styles = StyleSheet.create({
     borderColor: 'gray',
     borderWidth: 1,
   },
-  createButton: {
-    height: 50,
-    padding: 12,
-    fontSize: 24,
-    backgroundColor: "#11D811",
-    color: 'white',
+
+  nav: {
+    height: 32,
     flex: 1,
+    flexDirection: 'row',
+    backgroundColor: 'white',
+    borderColor: 'gray',
+    borderBottomWidth: 1,
+  },
+  createButton: {
+    fontSize: 12,
+    color: 'black',
+    padding: 7,
   },
 });
 

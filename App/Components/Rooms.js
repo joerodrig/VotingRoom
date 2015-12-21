@@ -1,5 +1,6 @@
 var Button           = require('react-native-button');
 var React            = require('react-native');
+var MonthlyHistory   = require('./MonthlyHistory');
 var Firebase         = require('firebase');
 var FirebaseRoomsRef = new Firebase("https://voting-room.firebaseio.com/rooms");
 var { View, Text, StyleSheet, ListView } = React;
@@ -28,7 +29,7 @@ class Rooms extends React.Component {
         return;
       } else {
         Object.keys(rooms.val()).forEach(function(key) {
-          roomsArray.push(rooms.val()[key]['name']);
+          roomsArray.push({unit: key, data: rooms.val()[key]});
         });
         self.setState({dataSource: self.state.ds.cloneWithRows(roomsArray)});
         self.setState({updating: false});
@@ -38,18 +39,31 @@ class Rooms extends React.Component {
     });
   }
 
+  _fetchRoom(rowData) {
+    var unitID = rowData.unit;
+    //Joining room
+    this.props.navigator.push({
+      title: rowData.unit.name,
+      component: MonthlyHistory,
+      passProps: {unit: rowData.unit}
+    });
+  }
+
   render() {
     // Load rooms
     return (
       <View style={styles.container}>
         <ListView style={styles.roomsList}
               dataSource={this.state.dataSource}
-              initialListSize={25}
               onEndReached={this._fetchRooms.bind(this)}
               renderRow={(rowData) =>
                 <View>
                   <View style={styles.row}>
-                    <Text style={styles.text}>{rowData}</Text>
+                    <Text
+                      style={styles.text}
+                      onPress={this._fetchRoom.bind(this,rowData)}
+                    >{rowData.data.name}
+                    </Text>
                   </View>
                   <View style={styles.separator} />
                 </View>

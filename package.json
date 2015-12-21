@@ -3,12 +3,34 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node_modules/react-native/packager/packager.sh"
+    "start": "node_modules/react-native/packager/packager.sh",
+    "test": "jest --verbose"
+  },
+  "jest": {
+    "scriptPreprocessor": "jestSupport/scriptPreprocess.js",
+    "setupTestFrameworkScriptFile": "jestSupport/customMatchers.js",
+    "unmockedModulePathPatterns": [
+      "react"
+    ],
+    "testFileExtensions": [
+      "spec.js"
+    ]
   },
   "dependencies": {
     "firebase": "^2.3.2",
-    "react-native": "^0.12.0-rc",
+    "react-native": "^0.12.0",
     "react-native-button": "^1.2.1",
     "tcomb-form-native": "^0.3.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.3.21",
+    "react": "^0.14.3",
+    "babel-core": "^5.8.25",
+    "indent": "0.0.1",
+    "inspect-react-element": "^1.0.1",
+    "jest-cli": "0.5.4",
+    "object-matches": "^1.0.0",
+    "react-shallow-renderer-helpers": "^1.2.0",
+    "react-addons-test-utils": "^0.14.3"
   }
 }
